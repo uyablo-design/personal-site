@@ -97,10 +97,29 @@
 var allArticles = [];
 var activeCategory = null;
 
+// Check for ?cat= param from homepage topic links
+var urlParams = new URLSearchParams(window.location.search);
+var catParam = urlParams.get('cat');
+
 sbFetch('articles?select=title,slug,excerpt,category,published_at&status=eq.published&order=published_at.desc&limit=100')
   .then(function(articles) {
     allArticles = articles || [];
     buildCatFilters();
+    // If a category was passed in the URL, try to match it fuzzy (case-insensitive partial match)
+    if (catParam) {
+      var matched = allArticles.find(function(a) {
+        return a.category && a.category.toLowerCase().indexOf(catParam.toLowerCase()) >= 0;
+      });
+      if (matched) {
+        activeCategory = matched.category;
+        renderArticles(allArticles.filter(function(a) { return a.category === activeCategory; }));
+        // Mark the matching filter button active
+        document.querySelectorAll('.cat-btn').forEach(function(b) {
+          b.classList.toggle('active', b.getAttribute('data-cat') === activeCategory);
+        });
+        return;
+      }
+    }
     renderArticles(allArticles);
   })
   .catch(function() {
