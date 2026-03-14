@@ -1,0 +1,146 @@
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+  <title>Articles — Uri Yablonka</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+  <meta name="description" content="Articles by Uri Yablonka on agentic AI in biopharma, CMC, R&D, clinical trials, AI governance, and regulatory AI." />
+  <link rel="canonical" href="https://uriyablonka.com/articles.html" />
+  <link rel="stylesheet" href="assets/css/main.css" />
+  <link rel="stylesheet" href="assets/css/custom.css" />
+</head>
+<body class="is-preload">
+<div id="page-wrapper">
+
+  <section id="header" class="wrapper">
+    <div id="logo">
+      <h1><a href="index.html">Uri Yablonka</a></h1>
+      <p>Agentic AI in Biopharma</p>
+    </div>
+    <nav id="nav">
+      <ul>
+        <li><a href="index.html">Home</a></li>
+        <li><a href="about.html">About</a></li>
+        <li class="current"><a href="articles.html">Articles</a></li>
+        <li><a href="contact.html">Contact</a></li>
+      </ul>
+    </nav>
+  </section>
+
+  <section id="intro" class="wrapper style1">
+    <div class="title">The Writing</div>
+    <div class="container">
+      <p class="style1">Complete Archive</p>
+      <p class="style2">Articles on<br class="mobile-hide" />Agentic AI<br class="mobile-hide" />in Biopharma</p>
+      <p class="style3">In-depth analysis on autonomous AI systems, drug development, governance, and the future of biopharma operations.</p>
+    </div>
+  </section>
+
+  <section id="main" class="wrapper style2">
+    <div class="title">All Articles</div>
+    <div class="container">
+      <div id="cat-filters" class="cat-filters"></div>
+      <div id="articles-container" class="article-grid">
+        <p class="loading-msg">Loading articles…</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="footer" class="wrapper">
+    <div class="title">Stay Updated</div>
+    <div class="container">
+      <header class="style1">
+        <h2>Follow the Conversation</h2>
+        <p>New articles on agentic AI in biopharma, published regularly.</p>
+      </header>
+      <div class="row">
+        <div class="col-6 col-12-medium">
+          <section class="feature-list small">
+            <div class="row">
+              <div class="col-6 col-12-small"><section>
+                <h3 class="icon brands fa-linkedin">LinkedIn</h3>
+                <p><a href="https://www.linkedin.com/in/uri-yablonka-7bb59866/" target="_blank" rel="noopener">linkedin.com/in/uri-yablonka</a></p>
+              </section></div>
+              <div class="col-6 col-12-small"><section>
+                <h3 class="icon brands fa-twitter">X / Twitter</h3>
+                <p><a href="https://x.com/UriYablonka" target="_blank" rel="noopener">@UriYablonka</a></p>
+              </section></div>
+            </div>
+          </section>
+        </div>
+        <div class="col-6 col-12-medium">
+          <ul class="actions" style="margin-top:1rem">
+            <li><a href="contact.html" class="button style1">Contact Uri</a></li>
+          </ul>
+        </div>
+      </div>
+      <div id="copyright">
+        <ul>
+          <li>&copy; Uri Yablonka.</li>
+          <li><a href="privacy.html">Privacy Policy</a></li>
+          <li><a href="terms.html">Terms of Use</a></li>
+          <li>Design: <a href="http://html5up.net">HTML5 UP</a></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+</div>
+<script src="assets/js/jquery.min.js"></script>
+<script src="assets/js/jquery.dropotron.min.js"></script>
+<script src="assets/js/browser.min.js"></script>
+<script src="assets/js/breakpoints.min.js"></script>
+<script src="assets/js/util.js"></script>
+<script src="assets/js/main.js"></script>
+<script src="assets/js/site.js"></script>
+<script>
+var allArticles = [];
+var activeCategory = null;
+
+sbFetch('articles?select=title,slug,excerpt,category,published_at&status=eq.published&order=published_at.desc&limit=100')
+  .then(function(articles) {
+    allArticles = articles || [];
+    buildCatFilters();
+    renderArticles(allArticles);
+  })
+  .catch(function() {
+    document.getElementById('articles-container').innerHTML = '<p style="color:rgba(255,255,255,0.4)">Could not load articles.</p>';
+  });
+
+function buildCatFilters() {
+  var cats = ['All'];
+  allArticles.forEach(function(a) { if (a.category && cats.indexOf(a.category) < 0) cats.push(a.category); });
+  if (cats.length <= 2) return;
+  var el = document.getElementById('cat-filters');
+  el.innerHTML = cats.map(function(c) {
+    return '<button class="cat-btn' + (c === 'All' ? ' active' : '') + '" data-cat="' + escHtml(c) + '">' + escHtml(c) + '</button>';
+  }).join('');
+  el.addEventListener('click', function(e) {
+    if (!e.target.classList.contains('cat-btn')) return;
+    document.querySelectorAll('.cat-btn').forEach(function(b) { b.classList.remove('active'); });
+    e.target.classList.add('active');
+    var cat = e.target.getAttribute('data-cat');
+    activeCategory = cat === 'All' ? null : cat;
+    var filtered = activeCategory ? allArticles.filter(function(a) { return a.category === activeCategory; }) : allArticles;
+    renderArticles(filtered);
+  });
+}
+
+function renderArticles(articles) {
+  var el = document.getElementById('articles-container');
+  if (!articles || articles.length === 0) {
+    el.innerHTML = '<p style="color:rgba(255,255,255,0.4)">No articles in this category yet.</p>';
+    return;
+  }
+  el.innerHTML = articles.map(function(a) {
+    return '<a href="article.html?slug=' + encodeURIComponent(a.slug) + '" class="article-card">' +
+      (a.category ? '<div class="cat">' + escHtml(a.category) + '</div>' : '') +
+      '<h3>' + escHtml(a.title) + '</h3>' +
+      '<p>' + escHtml((a.excerpt||'').substring(0,160)) + ((a.excerpt||'').length>160?'…':'') + '</p>' +
+      '<div class="meta">' + fmtDate(a.published_at) + '</div>' +
+      '</a>';
+  }).join('');
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,125 @@
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+  <title>Article — Uri Yablonka</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+  <link rel="stylesheet" href="assets/css/main.css" />
+  <link rel="stylesheet" href="assets/css/custom.css" />
+  <style>
+    #article-section { background: #fff; padding: 4rem 0; }
+    #article-section .container { max-width: 900px; }
+    .article-meta { font-family: 'Raleway', sans-serif; font-weight: 600; font-size: 0.65rem;
+      letter-spacing: 0.16em; text-transform: uppercase; color: #888; margin-bottom: 1.5rem; }
+    #article-title { font-family: 'Raleway', sans-serif; font-weight: 800; font-size: clamp(1.75rem, 4vw, 2.75rem);
+      line-height: 1.15; color: #0d1117; margin-bottom: 1rem; }
+    .article-excerpt { font-size: 1.15rem; color: rgba(0,0,0,0.55); line-height: 1.7;
+      font-family: 'Source Sans 3', sans-serif; margin-bottom: 2rem; border-bottom: 2px solid #49fcd4; padding-bottom: 2rem; }
+  </style>
+</head>
+<body class="is-preload">
+<div id="page-wrapper">
+
+  <section id="header" class="wrapper">
+    <div id="logo">
+      <h1><a href="index.html">Uri Yablonka</a></h1>
+      <p>Agentic AI in Biopharma</p>
+    </div>
+    <nav id="nav">
+      <ul>
+        <li><a href="index.html">Home</a></li>
+        <li><a href="about.html">About</a></li>
+        <li class="current"><a href="articles.html">Articles</a></li>
+        <li><a href="contact.html">Contact</a></li>
+      </ul>
+    </nav>
+  </section>
+
+  <section id="article-section">
+    <div class="container">
+      <div id="article-loading" class="loading-msg" style="color:#888">Loading article…</div>
+      <div id="article-content" style="display:none">
+        <p style="margin-bottom:1.5rem"><a href="articles.html" style="color:#49fcd4;font-family:Raleway,sans-serif;font-size:0.7rem;font-weight:600;letter-spacing:0.12em;text-transform:uppercase">&larr; All Articles</a></p>
+        <div id="article-chip" class="article-header-chip"></div>
+        <div id="article-title"></div>
+        <div id="article-excerpt" class="article-excerpt"></div>
+        <div id="article-meta" class="article-meta"></div>
+        <div id="article-body" class="article-body"></div>
+        <div style="margin-top:3rem;padding-top:2rem;border-top:1px solid #eee">
+          <a href="articles.html" class="button style1">← Back to Articles</a>
+        </div>
+      </div>
+      <div id="article-error" style="display:none;color:#888;padding:4rem 0">
+        <p>Article not found. <a href="articles.html" style="color:#49fcd4">Browse all articles.</a></p>
+      </div>
+    </div>
+  </section>
+
+  <section id="footer" class="wrapper">
+    <div class="title">Keep Reading</div>
+    <div class="container">
+      <header class="style1">
+        <h2>More Articles</h2>
+        <p>Explore the full archive on agentic AI in biopharma.</p>
+      </header>
+      <ul class="actions special">
+        <li><a href="articles.html" class="button style1 large">All Articles</a></li>
+        <li><a href="contact.html" class="button style2 large">Get in Touch</a></li>
+      </ul>
+      <div id="copyright">
+        <ul>
+          <li>&copy; Uri Yablonka.</li>
+          <li><a href="privacy.html">Privacy Policy</a></li>
+          <li><a href="terms.html">Terms of Use</a></li>
+          <li>Design: <a href="http://html5up.net">HTML5 UP</a></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+</div>
+<script src="assets/js/jquery.min.js"></script>
+<script src="assets/js/jquery.dropotron.min.js"></script>
+<script src="assets/js/browser.min.js"></script>
+<script src="assets/js/breakpoints.min.js"></script>
+<script src="assets/js/util.js"></script>
+<script src="assets/js/main.js"></script>
+<script src="assets/js/site.js"></script>
+<script>
+var params = new URLSearchParams(window.location.search);
+var slug = params.get('slug');
+if (!slug) {
+  window.location.href = 'articles.html';
+} else {
+  sbFetch('articles?select=*&slug=eq.' + encodeURIComponent(slug) + '&status=eq.published&limit=1')
+    .then(function(data) {
+      document.getElementById('article-loading').style.display = 'none';
+      if (!data || data.length === 0) {
+        document.getElementById('article-error').style.display = 'block';
+        return;
+      }
+      var a = data[0];
+      document.title = a.title + ' — Uri Yablonka';
+      if (a.category) {
+        document.getElementById('article-chip').textContent = a.category;
+        document.getElementById('article-chip').style.display = 'inline-block';
+      }
+      document.getElementById('article-title').innerHTML = '<h1 id="article-title" style="font-family:Raleway,sans-serif;font-weight:800;font-size:clamp(1.75rem,4vw,2.75rem);line-height:1.15;color:#0d1117;margin-bottom:1rem">' + escHtml(a.title) + '</h1>';
+      if (a.excerpt) document.getElementById('article-excerpt').textContent = a.excerpt;
+      document.getElementById('article-meta').textContent = (a.author ? a.author + ' · ' : '') + fmtDate(a.published_at);
+      var bodyEl = document.getElementById('article-body');
+      if (a.content) {
+        bodyEl.innerHTML = a.content;
+      } else {
+        bodyEl.textContent = 'Full article content not available.';
+      }
+      document.getElementById('article-content').style.display = 'block';
+    })
+    .catch(function() {
+      document.getElementById('article-loading').style.display = 'none';
+      document.getElementById('article-error').style.display = 'block';
+    });
+}
+</script>
+</body>
+</html>
