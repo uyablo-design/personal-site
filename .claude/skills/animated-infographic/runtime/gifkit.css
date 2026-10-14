@@ -189,8 +189,9 @@ html.gifkit-preview .canvas {
 .chart { position: relative; display: flex; flex-direction: column; gap: 6px; }
 .bars { display: flex; align-items: flex-end; gap: 12px; height: var(--chart-h, 110px); border-bottom: 2px solid var(--ink-2); padding: 0 6px; }
 .bar { flex: 1; height: var(--v, 50%); border-radius: 5px 5px 0 0; background: var(--t, var(--blue)); }
-.bars .bar:nth-child(1) { opacity: .32; } .bars .bar:nth-child(2) { opacity: .44; } .bars .bar:nth-child(3) { opacity: .56; }
-.bars .bar:nth-child(4) { opacity: .7; }  .bars .bar:nth-child(5) { opacity: .84; } .bars .bar:nth-child(6) { opacity: 1; }
+/* shade ramps from light to full across however many bars there are (--bar-i / --bar-n are set by gifkit.js); .bars.flat disables it */
+.bars .bar { opacity: calc(0.32 + 0.68 * var(--bar-i, 1) / max(1, var(--bar-n, 1) - 1)); }
+.bars.flat .bar { opacity: 1; }
 .chart .axis-label { text-align: center; font-size: 11px; color: var(--muted); }
 .chart svg.overlay { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; pointer-events: none; }
 .trend { fill: none; stroke: var(--t, var(--blue)); stroke-width: 2.6; stroke-linecap: round; }

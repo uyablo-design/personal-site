@@ -81,6 +81,10 @@
 
   function collectItems() {
     items = [];
+    canvas.querySelectorAll(".bars").forEach((g) => {
+      const bars = [...g.querySelectorAll(":scope > .bar")];
+      bars.forEach((b, i) => { b.style.setProperty("--bar-i", i); b.style.setProperty("--bar-n", bars.length); });
+    });
     canvas.querySelectorAll("[data-anim]").forEach((el) => {
       const group = el.parentElement && el.parentElement.closest("[data-stagger]");
       let at = num(el.dataset.at, null);

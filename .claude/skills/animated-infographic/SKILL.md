@@ -32,22 +32,32 @@ $SKILL/scripts/analyze_reference.py       measure a reference GIF / screen recor
 2. **Content first.** Settle the topic and the one message before any layout, and write all the copy:
    - a title of 2–4 words (about 700px wide at 64px, so it stays on one line)
    - a subtitle under 60 characters
-   - a "before" flow and an "after" flow, 3–4 nodes each, plus a one-line takeaway for each
-   - four numbered principles: a 3–5 word title, one or two sentences, and one small visual each
+   - the main diagram: 1–2 sections of 3–4 nodes each, plus a one-line takeaway per section. Pick the
+     shape that fits the topic: **before/after** (problem vs fix, the example's shape), **pathway**
+     (sequential phases or stages: one section, nodes left to right, each with a few `.kv` facts and a
+     meter), or **framework** (one hub node feeding several outcomes via a wire fork)
+   - four numbered principles (two for a square canvas): a 3–5 word title, one or two sentences, and
+     one small visual each. The example's four visual types (step list, two-up cards, routed rows,
+     bar chart) are meant to be reused and relabelled; invent a new visual only if none fits
 
    Never invent statistics. A chart without real data is labelled "(illustrative)". If the user
    shows a reference GIF or recording, study it first (see "Matching a reference" below).
-   The example's footer is "Follow **Uri Yablonka** for more on agentic AI in biopharma | uriyablonka.com".
-   Keep it for Uri's posts; use the user's own name and handle for anyone else.
-3. **Build the page.** Make a working folder in the current directory, `gif-output/<slug>/`, copy
+   This skill belongs to Uri Yablonka, so the example's footer ("Follow **Uri Yablonka** for more on
+   agentic AI in biopharma | uriyablonka.com") is the default, no need to ask. Change the footer text
+   only when the user names a different person or brand.
+3. **Build the page.** `mkdir -p gif-output/<slug>` in the current directory, copy
    `$SKILL/examples/agentic-case-triage.html` to `gif-output/<slug>/<slug>.html`, and replace its
-   content and the widths in its page `<style>`. Keep `<link href="gifkit.css">` and
+   content. Keep the page consistent as you edit: every `data-from`/`data-to` id must still exist, node
+   widths in the page `<style>` must still add up to the row width, and `.code` blocks do not wrap
+   (shorten the text rather than widening the node). Keep `<link href="gifkit.css">` and
    `<script src="gifkit.js">` exactly as they are: the renderer serves both, plus the fonts, from the
    skill, wherever the page lives. Fill the whole canvas (1080×1350 by default); big empty cards read
    as unfinished, so add content or tighten the layout. Different shapes are covered in "Canvas sizes".
 4. **Review stills before rendering the GIF.**
    `node "$SKILL/render.mjs" gif-output/<slug>/<slug>.html --stills 0.3,2.6 --scale 1`
-   and read both PNGs. 0.3s is the empty pre-build state, 2.6s is fully built. Fix every `warning:`
+   and read both PNGs. 0.3s is the mostly empty pre-build state; 2.6s is fully built as long as you
+   kept the example's `data-at` timings (otherwise pick any time after your last build finishes and
+   before `data-reset`). Fix every `warning:`
    the renderer prints (overflow, content past the canvas), and anything you can see yourself:
    titles that wrap, uneven card heights, text colliding with charts or other text, arrows that end
    inside a card, a card with large empty areas. Repeat until clean.
@@ -133,14 +143,17 @@ Put `data-anim` on an element, with `data-at` (start, seconds), `data-dur`, `dat
 
 ## Canvas sizes
 
-The example is built for 1080×1350 (4:5 portrait, best on LinkedIn). For other shapes set `--w`/`--h`
-on `.canvas` and then remove content rather than shrinking it, because the type is already near its
-minimum size:
+The example is built for 1080×1350 (4:5 portrait, best on LinkedIn). For other shapes, override the
+size in the page's own `<style>`: `.canvas { --w: 1080px; --h: 1080px; }`. The type is already near its
+minimum size, so cut content rather than shrinking it, and when a smaller layout leaves cards with
+large empty areas, scale the content up (bigger chart, larger step text, taller bars) instead:
 
-- **1080×1080:** hero + one before/after section + a 2-card tips row. Drop the second flow or the divider.
+- **1080×1080:** hero + one section (before/after or pathway) + a 2-card tips row. Drop the second
+  flow or the divider.
 - **1200×675 (landscape):** hero on the left, one flow on the right, no tips grid.
 
-Always re-run the stills review after resizing; overflow warnings will tell you what to cut.
+Always re-run the stills review after resizing. Overflow warnings catch clipping, but only your eyes
+catch empty space, so look at every card.
 
 ## Matching a reference
 
@@ -169,6 +182,9 @@ clean option.
 - **Text overflow warning:** shorten the copy first; widen a card only if every sibling still fits.
 - **A connector ends in the wrong place:** check the `data-from`/`data-to` ids exist, then try
   `data-to-edge`, `data-elbow`, or an explicit side.
-- **Chart note collides with the trend line:** move `.chart-note` (`left`/`top`) or shorten the bars.
+- **Chart note collides with the trend line:** move `.chart-note` (`left`/`top`), shorten the bars, or
+  raise `data-lift` on the trend path so the arrow clears the last bar.
+- **Bars look washed out:** shading ramps from light to full across however many bars there are; add
+  `class="bars flat"` for uniform full-strength bars (good for 2–3 bars).
 - **Fonts look like Arial:** `--doctor` reports missing bundled fonts; the skill folder is incomplete.
 - **Render is slow:** use `--scale 1` while iterating on stills; the final render uses 2.
