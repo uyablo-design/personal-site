@@ -1,0 +1,26 @@
+{
+  "skill_name": "animated-infographic",
+  "evals": [
+    {
+      "id": 1,
+      "name": "portrait-explainer-new-topic",
+      "prompt": "make me one of those animated linkedin infographic gifs explaining how retrieval-augmented generation works. the before is an LLM answering from memory and hallucinating, the after is retrieving the right documents first and citing them",
+      "expected_output": "A looping GIF (about 1080x1350) with a before and an after flow, four numbered principles, a bar chart with a drawn trend arrow, animated connectors; no text overflow; the chart labelled illustrative or backed by no invented statistics.",
+      "files": []
+    },
+    {
+      "id": 2,
+      "name": "square-format",
+      "prompt": "I need a square 1080x1080 animated GIF for a post about the three phases of a clinical trial (phase 1 safety, phase 2 efficacy signals, phase 3 confirmation). Make it look like the other infographic gifs.",
+      "expected_output": "A 1080x1080 looping GIF that kept the visual style but cut content to fit: no overflow, no clipped text, animation still present (connectors, fills or bars).",
+      "files": []
+    },
+    {
+      "id": 3,
+      "name": "match-a-reference",
+      "prompt": "here is a screen recording of a gif I like (path given). build me one in the same style about how to read a forest plot, in my own words",
+      "expected_output": "The agent runs analyze_reference.py on the recording, uses its report to choose loop length and animated regions, and produces an original infographic (not a copy of the source text).",
+      "files": ["<screen recording of an animated infographic>"]
+    }
+  ]
+}

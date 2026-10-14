@@ -4,6 +4,7 @@
 //   node render.mjs page.html                       -> page.gif + page.png (poster)
 //   node render.mjs page.html --stills 0.6,1.8,3.5  -> PNG stills only (fast design review)
 //   node render.mjs page.html --fps 15 --width 1080 --mp4 --out out/name.gif
+//   node render.mjs --doctor                         -> check node, ffmpeg, playwright, chromium
 //
 // Requires: Chromium via Playwright, and ffmpeg on PATH.
 import { createRequire } from "node:module";
@@ -35,9 +36,11 @@ function parseArgs(argv) {
     else if (a === "--dither") opts.dither = next();
     else if (a === "--colors") opts.colors = +next();
     else if (a === "--bundle") opts.bundle = true;
+    else if (a === "--doctor") opts.doctor = true;
     else if (a === "-h" || a === "--help") { console.log(readFileSync(fileURLToPath(import.meta.url), "utf8").split("\n").slice(1, 8).join("\n")); process.exit(0); }
     else pos.push(a);
   }
+  if (opts.doctor) return opts;
   if (!pos[0]) throw new Error("usage: node render.mjs page.html [--out x.gif] [--fps 15] [--width 1080] [--stills 0.5,2] [--mp4] [--bundle]");
   opts.input = resolve(pos[0]);
   return opts;
@@ -71,7 +74,9 @@ async function launch(chromium) {
 
 function bundleHtml(input, out) {
   let html = readFileSync(input, "utf8");
-  html = html.replace(/<link[^>]+href="[^"]*gifkit\.css"[^>]*>/, () => `<style>\n${readFileSync(join(RUNTIME, "gifkit.css"), "utf8")}\n</style>`);
+  const css = readFileSync(join(RUNTIME, "gifkit.css"), "utf8").replace(/url\("fonts\/([^"]+)"\)/g, (_, f) =>
+    `url("data:font/woff2;base64,${readFileSync(join(RUNTIME, "fonts", f)).toString("base64")}")`);
+  html = html.replace(/<link[^>]+href="[^"]*gifkit\.css"[^>]*>/, () => `<style>\n${css}\n</style>`);
   html = html.replace(/<script[^>]+src="[^"]*gifkit\.js"[^>]*><\/script>/, () => `<script>\n${readFileSync(join(RUNTIME, "gifkit.js"), "utf8")}\n</script>`);
   writeFileSync(out, html);
   return out;
@@ -89,7 +94,10 @@ function serve(root) {
       let file = resolve(root, rel);
       if (!file.startsWith(resolve(root)) || !existsSync(file) || statSync(file).isDirectory()) {
         const name = basename(rel);
-        file = name === "gifkit.css" || name === "gifkit.js" ? join(RUNTIME, name) : null;
+        const asset = resolve(RUNTIME, rel); // e.g. fonts/Inter-Bold.woff2, referenced from gifkit.css
+        if (name === "gifkit.css" || name === "gifkit.js") file = join(RUNTIME, name);
+        else if (asset.startsWith(RUNTIME + "/") && existsSync(asset) && !statSync(asset).isDirectory()) file = asset;
+        else file = null;
       }
       if (!file) { res.writeHead(404); return res.end(); }
       res.writeHead(200, { "content-type": TYPES[extname(file).toLowerCase()] || "application/octet-stream" });
@@ -99,8 +107,30 @@ function serve(root) {
   });
 }
 
+async function doctor() {
+  let ok = true;
+  const say = (good, msg, fix) => { console.log(`${good ? "ok     " : "MISSING"} ${msg}`); if (!good) { ok = false; if (fix) console.log(`        fix: ${fix}`); } };
+  const major = +process.versions.node.split(".")[0];
+  say(major >= 18, `node ${process.versions.node}`, "install Node 18 or newer (https://nodejs.org)");
+  let ff = "";
+  try { ff = execFileSync("ffmpeg", ["-version"], { stdio: ["ignore", "pipe", "ignore"] }).toString().split("\n")[0]; } catch {}
+  say(!!ff, ff || "ffmpeg", "macOS: brew install ffmpeg | Debian/Ubuntu: apt-get install -y ffmpeg");
+  let pw = null;
+  try { pw = loadPlaywright(); } catch {}
+  say(!!pw, "playwright (node module)", "npm i -g playwright   (then re-run --doctor)");
+  if (pw) {
+    try { const b = await launch(pw.chromium); await b.close(); say(true, "chromium launches headless"); }
+    catch (e) { say(false, "chromium launches headless", "npx playwright install chromium   (cloud sessions normally ship it in /opt/pw-browsers)"); }
+  }
+  const fonts = existsSync(join(RUNTIME, "fonts", "Inter-Bold.woff2"));
+  say(fonts, "bundled Inter fonts", "the skill folder is incomplete; reinstall the skill");
+  console.log(ok ? "\nall good: ready to render" : "\nfix the MISSING items above, then run --doctor again");
+  process.exit(ok ? 0 : 1);
+}
+
 async function main() {
   const o = parseArgs(process.argv.slice(2));
+  if (o.doctor) return doctor();
   const stem = o.out ? resolve(o.out).replace(/\.gif$/i, "") : join(dirname(o.input), basename(o.input, extname(o.input)));
   mkdirSync(dirname(stem), { recursive: true });
   if (o.bundle) { console.log("standalone html:", bundleHtml(o.input, stem + ".standalone.html")); return; }

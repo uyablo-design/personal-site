@@ -1,145 +1,174 @@
 ---
 name: animated-infographic
-description: Create polished animated infographic GIFs (LinkedIn-style explainer diagrams with traveling connector dots, filling confidence bars, highlighter sweeps, growing bar charts) and render them to seamless looping GIF, MP4 and PNG. Use when the user asks for an animated infographic, explainer GIF, animated diagram, "one of those GIFs", or a visual post for LinkedIn or social.
+description: Generate polished, animated infographic GIFs (also MP4 and PNG) for LinkedIn and social posts, in the style of the diagram-heavy "explainer" GIFs that go viral there. Flow diagrams with traveling connector dots, filling confidence bars, highlighter sweeps, growing bar charts with a drawn trend arrow, numbered tip cards, all in a seamless loop. Use this skill whenever the user asks for an animated infographic, an explainer or diagram GIF, "one of those GIFs", an animated version of a diagram, concept, framework, before/after or process, a visual for a LinkedIn or Twitter post, or wants to copy the look of a GIF or screen recording they show you, even if they only say "GIF" or "make this move" and never mention infographics. Not for searching for existing GIFs, trimming videos, or screen-capturing apps.
+compatibility: Needs Node 18+, ffmpeg, and Playwright with Chromium. Run `node "$SKILL/render.mjs" --doctor` to check; cloud Claude Code sessions normally have everything. Inter fonts are bundled.
 ---
 
 # Animated infographic GIFs
 
-You write one HTML page per infographic using the kit's design system and animation
-attributes. `render.mjs` then captures every frame in headless Chromium and encodes a
-looping GIF with ffmpeg. Each frame is a pure function of time, so loops are seamless and
-renders are reproducible.
+You write one HTML page per infographic from a small design kit, and `render.mjs` captures every
+frame in headless Chromium and encodes a looping GIF with ffmpeg. Every visual state is a pure
+function of time, so loops are seamless and renders are reproducible. Because the page is plain
+HTML/CSS, you can fit the design to any topic and review it as a still before paying for a render.
 
-Files in this skill:
+## Where things are
 
-- `runtime/gifkit.css`: the design system (tones, cards, pills, code, meters, highlighter, tips, chart, footer).
-- `runtime/gifkit.js`: the animation runtime, connector router and icon set.
-- `render.mjs`: the renderer (stills, GIF, MP4, poster, standalone preview HTML).
-- `examples/agentic-case-triage.html`: the canonical template. It uses every component and effect.
+The harness prints "Base directory for this skill: <path>" when this skill loads. Call that path
+`$SKILL` and use it for every command (do not assume `.claude/skills/...` exists in the repo you
+are working in):
+
+```
+$SKILL/render.mjs                         renderer: stills, GIF, MP4, poster PNG, standalone preview, --doctor
+$SKILL/runtime/gifkit.css                 design system (tones, cards, pills, code, meters, charts, footer); Inter fonts bundled
+$SKILL/runtime/gifkit.js                  animation runtime, connector router, icon set
+$SKILL/examples/agentic-case-triage.html  the canonical template: every component and effect in use
+$SKILL/scripts/analyze_reference.py       measure a reference GIF / screen recording (fps, loop, animated regions)
+```
 
 ## Workflow
 
-1. **Content first.** Get the topic and the one message. Write the copy before any layout:
-   - a title of 2–4 words (it must fit about 700px at 64px)
+1. **Preflight (first use in a session).** `node "$SKILL/render.mjs" --doctor`. It names exactly
+   what is missing (ffmpeg, Playwright, Chromium) and the command that fixes it. Fix, then continue.
+2. **Content first.** Settle the topic and the one message before any layout, and write all the copy:
+   - a title of 2–4 words (about 700px wide at 64px, so it stays on one line)
    - a subtitle under 60 characters
-   - a "before" flow and an "after" flow of 3–4 nodes each
-   - a one-line takeaway per flow
-   - four numbered principles, each a title of 3–5 words, one or two sentences, and one small visual
+   - a "before" flow and an "after" flow, 3–4 nodes each, plus a one-line takeaway for each
+   - four numbered principles: a 3–5 word title, one or two sentences, and one small visual each
 
-   Never invent statistics. Label any chart without real data "(illustrative)".
-   The default footer is "Follow **Uri Yablonka** for more on agentic AI in biopharma | uriyablonka.com".
-   Use another footer if the user gives one.
-2. **Build.** Copy `examples/agentic-case-triage.html` to `gif-output/<slug>/<slug>.html` in the repo,
-   then replace its content and adjust the page `<style>` widths. Keep `<link href="gifkit.css">` and
-   `<script src="gifkit.js">` as they are; the renderer serves both from this skill.
-   Fill the whole 1080×1350 canvas. Large empty cards look unfinished, so add content or tighten the grid.
-3. **Review stills before rendering the GIF.**
-   `node .claude/skills/animated-infographic/render.mjs gif-output/<slug>/<slug>.html --stills 0.3,2.6 --scale 1`
-   Read both PNGs. 2.6s is the fully built state; 0.3s shows the empty, pre-build state. Fix every
-   `warning:` the renderer prints (overflow, content past the canvas), plus any of these you can see:
-   - titles wrapping to a second line
-   - side-by-side cards with uneven heights
-   - text colliding with charts or with other text
-   - arrows ending inside a card
-   
-   Repeat until clean.
-4. **Render.** `node .claude/skills/animated-infographic/render.mjs gif-output/<slug>/<slug>.html --mp4`
-   This writes `<slug>.gif`, `<slug>.mp4` (three loops, for LinkedIn video) and `<slug>.png`
-   (a still of the built state). Then check one frame decoded from the GIF itself:
-   `ffmpeg -v error -i x.gif -vf "select=eq(n\,36)" -frames:v 1 check.png`
-5. **Deliver.** Send the GIF to the user (SendUserFile, display render), and mention the MP4 and PNG.
-   `gif-output/` is git-ignored. Commit outputs only if the user asks.
+   Never invent statistics. A chart without real data is labelled "(illustrative)". If the user
+   shows a reference GIF or recording, study it first (see "Matching a reference" below).
+   The example's footer is "Follow **Uri Yablonka** for more on agentic AI in biopharma | uriyablonka.com".
+   Keep it for Uri's posts; use the user's own name and handle for anyone else.
+3. **Build the page.** Make a working folder in the current directory, `gif-output/<slug>/`, copy
+   `$SKILL/examples/agentic-case-triage.html` to `gif-output/<slug>/<slug>.html`, and replace its
+   content and the widths in its page `<style>`. Keep `<link href="gifkit.css">` and
+   `<script src="gifkit.js">` exactly as they are: the renderer serves both, plus the fonts, from the
+   skill, wherever the page lives. Fill the whole canvas (1080×1350 by default); big empty cards read
+   as unfinished, so add content or tighten the layout. Different shapes are covered in "Canvas sizes".
+4. **Review stills before rendering the GIF.**
+   `node "$SKILL/render.mjs" gif-output/<slug>/<slug>.html --stills 0.3,2.6 --scale 1`
+   and read both PNGs. 0.3s is the empty pre-build state, 2.6s is fully built. Fix every `warning:`
+   the renderer prints (overflow, content past the canvas), and anything you can see yourself:
+   titles that wrap, uneven card heights, text colliding with charts or other text, arrows that end
+   inside a card, a card with large empty areas. Repeat until clean.
+5. **Render.** `node "$SKILL/render.mjs" gif-output/<slug>/<slug>.html --mp4` writes `<slug>.gif`,
+   `<slug>.mp4` (three loops, which LinkedIn plays better than a GIF) and `<slug>.png` (the built
+   state). Check one frame decoded from the GIF itself, because palette conversion can differ from
+   the stills: `ffmpeg -v error -i x.gif -vf "select=eq(n\,36)" -frames:v 1 check.png`.
+6. **Deliver.** Send the GIF with whatever file-delivery tool you have (SendUserFile, present_files).
+   If you have none, give its full path. Mention the MP4 and PNG. Do not `git add` `gif-output/`
+   unless the user asks, and say so if the repo does not ignore it.
+
+If a render cannot work in the current environment (no Chromium, no network to install it), say so
+and use `--bundle` instead: it writes a single self-contained `.standalone.html` that animates in any
+browser (click to pause), which the user can screen-record.
 
 ## Motion recipe
 
-The recipe below was measured from a reference post. Keep to it unless the user wants something else.
+Measured from a real viral reference post. Keep to it unless the user wants something else.
 
-- Loop of 4–4.5s (`data-loop`), encoded at 15 fps (`data-fps`).
-- **Build** (about 0.4–2.1s), staggered left to right and top to bottom:
-  1. confidence meters fill
-  2. highlighter pills sweep
-  3. chart bars grow one by one
-  4. the dashed trend line draws
-  5. the trend line's arrowhead appears last
-- **Hold** for at least 1.5s on the finished state.
-- **Reset:** everything retracts together over 0.45s (`data-reset`, `data-reset-dur`), then
-  stays empty for about 0.5s before the next build.
+- Loop of 4–4.5s (`data-loop`) encoded at 15 fps (`data-fps`); the reference ran at about 13 fps.
+- **Build** (about 0.4–2.1s), staggered left to right and top to bottom: confidence meters fill,
+  highlighter pills sweep, chart bars grow one by one, the dashed trend line draws, its arrowhead
+  appears last.
+- **Hold** at least 1.5s on the finished state.
+- **Reset:** everything retracts together over 0.45s (`data-reset`, `data-reset-dur`), then stays empty
+  for about 0.5s before the next build.
 - **Connectors never stop:** a small colored dot travels along each one, about 0.7s per trip.
 - **Titles, cards, body text and the footer never move.** Motion is only for things that carry
-  meaning (data flowing, confidence, choices, growth). Animate at most 5–7 regions.
+  meaning (data flowing, confidence, choices, growth). Animate at most 5–7 regions; more reads as noise.
 
 ## Animation attributes
 
-- **Build-and-reset animations:** put `data-anim` on an element. Add `data-at` (start, in seconds),
-  `data-dur` and `data-ease` (`out`, `in`, `inout`, `back` or `linear`). Add `data-persist` to stop
-  an element from retracting at reset.
+Put `data-anim` on an element, with `data-at` (start, seconds), `data-dur`, `data-ease`
+(`out`, `in`, `inout`, `back`, `linear`) and `data-persist` (do not retract at reset).
 
-  | `data-anim` | Effect |
-  |---|---|
-  | `grow-x` | Horizontal fill, e.g. `.track > .fill` with `style="--v:80%"` |
-  | `grow-y` | Vertical growth for `.bar` |
-  | `sweep` | Left-to-right reveal (clip) |
-  | `var` | Only sets `--p` from 0 to 1; `.hl` highlighter pills use this |
-  | `fade` / `rise` / `pop` | Appear |
-  | `draw` | SVG path draw-on; `data-dash="6 7"` makes it dashed |
-  | `count` | Number ticker; uses `data-to`, `data-decimals`, `data-prefix`, `data-suffix` |
-  | `type` | Typewriter, for code or quotes |
+| `data-anim` | Effect |
+|---|---|
+| `grow-x` | Horizontal fill, e.g. `.track > .fill` with `style="--v:80%"` |
+| `grow-y` | Vertical growth for `.bar` |
+| `sweep` | Left-to-right reveal (clip) |
+| `var` | Only drives `--p` from 0 to 1; `.hl` highlighter pills use this |
+| `fade` / `rise` / `pop` | Appear |
+| `draw` | SVG path draw-on; `data-dash="6 7"` makes it dashed |
+| `count` | Number ticker: `data-to`, `data-decimals`, `data-prefix`, `data-suffix` |
+| `type` | Typewriter, for code or quotes |
 
-- **Stagger:** `data-stagger="0.1"` (with optional `data-at`) on a parent offsets each animated
+- **Stagger:** `data-stagger="0.1"` (and optional `data-at`) on a parent offsets each animated
   descendant by 0.1s.
-- **Connectors:** add `<path data-wire data-from="#a" data-to="#b">` inside `<svg class="wires">`
-  at the end of the canvas. It routes automatically with an elbow, rounded corners, an arrowhead
-  and a traveling dot.
+- **Connectors:** `<path data-wire data-from="#a" data-to="#b">` inside `<svg class="wires">` placed
+  last in the canvas. It routes itself with an elbow, rounded corners, an arrowhead and a traveling dot.
 
   | Option | Purpose |
   |---|---|
-  | `data-from-side` / `data-to-side` | Which side to connect: `left`, `right`, `top` or `bottom` |
+  | `data-from-side` / `data-to-side` | `left`, `right`, `top` or `bottom` |
   | `data-from-at` / `data-to-at` | Position along that side, 0 to 1 |
-  | `data-elbow` | Where the elbow sits: px from the start, or `%` |
-  | `data-to-edge="#card"` | Aim at a row inside a card but stop at the card's border (for forks) |
-  | `data-dots` | Number of traveling dots |
-  | `data-dot-color` | Dot color |
-  | `data-phase` | Offsets the dot (0–1); stagger sibling wires |
+  | `data-elbow` | Where the bend sits: px from the start, or `%` |
+  | `data-to-edge="#card"` | Aim at a row inside a card but stop at the card's border (forks) |
+  | `data-dots`, `data-dot-color`, `data-phase` | Dot count, color, and 0–1 offset (stagger sibling wires) |
   | `data-arrow="none"` | No arrowhead |
 
   A tone class on the wrapping `<g>` colors the dots.
-- **Trend line:** `<svg class="overlay"><path class="trend" data-trend data-lift="18" data-dash="6 7" data-anim="draw" …>`
-  inside a `.chart`. The curve is computed through the bar tops, and the arrowhead is added and
-  timed automatically.
-- **Continuous motion:** `data-pulse="1.15" data-cycles="2"` adds a gentle scale pulse.
-- **Icons:** `<i class="ic" data-icon="agent"></i>`. Available icons:
-  agent, user, users, doc, check, alert, info, spark, route, shield, flask, capsule, chart, clock,
-  mail, search, layers, zap, database, tag, code, eye, target, gauge, split, plus, arrow, globe,
-  dna, lock. Add new ones to the `ICONS` map in `gifkit.js` as 24×24 stroke paths.
+- **Trend line:** inside a `.chart`, `<svg class="overlay"><path class="trend" data-trend data-lift="18"
+  data-dash="6 7" data-anim="draw" data-at="1.45" data-dur="0.6">`. The curve follows the bar tops and
+  its arrowhead is added and timed for you.
+- **Pulse:** `data-pulse="1.15" data-cycles="2"` for a gentle scale loop.
+- **Icons:** `<i class="ic" data-icon="agent"></i>`. Available: agent, user, users, doc, check, alert,
+  info, spark, route, shield, flask, capsule, chart, clock, mail, search, layers, zap, database, tag,
+  code, eye, target, gauge, split, plus, arrow, globe, dna, lock. To add one, put a 24×24 stroke path
+  in the `ICONS` map in `gifkit.js`.
 
 ## Design system
 
 - **Tones:** `.tone-orange` (problem or "before"), `.tone-green` (solution or "after"), `.tone-blue`,
-  `.tone-red` (risk or escalation), `.tone-violet`, `.tone-gray`. A tone set on a container
-  colors its section band, borders, badges, pills, meters and highlights. Use at most three
-  tones per graphic.
-- **Components:**
-  - layout: `.hero` with `.title`/`.subtitle`; `.section` with `.section-head` (+ `.aside`) and
-    `.section-note` (+ `.soft`); `.divider`; `.tips` grid of `.tip` with `.tip-head`, `.badge`
-    and `.tip-title`; `.footer`
-  - content: `.node` (`.accent`) with `.node-title`, `.node-sub`, `ul`; `.code` (`.k` `.s` `.d`
-    spans); `.kv` with `.key` + `.pill`; `.fields` with `.label`, `.meter` / `.track` / `.fill`,
-    and `.value`; `.hl` highlighter; `.chart` with `.bars` / `.bar`, `.axis-label` and `.chart-note`
-- **Type:** Inter and Inter Display, plus a monospace font for code. Minimum size is 10.5px. Copy is
-  sentence case except titles. The canvas defaults to 1080×1350 (4:5 portrait); set `--w` / `--h`
-  on `.canvas` for 1080×1080 or 1200×675.
+  `.tone-red` (risk, escalation), `.tone-violet`, `.tone-gray`. A tone on a container colors its section
+  band, borders, badges, pills, meters and highlights. At most three tones per graphic.
+- **Layout:** `.hero` (`.title`, `.subtitle`); `.section` (`.section-head` with `.aside`, `.section-note`
+  with `.soft`); `.divider`; `.tips` grid of `.tip` (`.tip-head`, `.badge`, `.tip-title`); `.footer`.
+- **Content:** `.node` (`.accent`) with `.node-title`, `.node-sub`, `ul`; `.code` (spans `.k` `.s` `.d`);
+  `.kv` with `.key` + `.pill`; `.fields` with `.label`, `.meter` > `.track` > `.fill`, `.value`;
+  `.hl` highlighter; `.chart` with `.bars` > `.bar`, `.axis-label`, `.chart-note`.
+- **Type:** Inter and Inter Display (bundled), monospace for code, minimum 10.5px, sentence case except
+  titles. Use real font weights only (300, 400, 500, 600, 700, 800); in-between values resolve unpredictably.
+
+## Canvas sizes
+
+The example is built for 1080×1350 (4:5 portrait, best on LinkedIn). For other shapes set `--w`/`--h`
+on `.canvas` and then remove content rather than shrinking it, because the type is already near its
+minimum size:
+
+- **1080×1080:** hero + one before/after section + a 2-card tips row. Drop the second flow or the divider.
+- **1200×675 (landscape):** hero on the left, one flow on the right, no tips grid.
+
+Always re-run the stills review after resizing; overflow warnings will tell you what to cut.
+
+## Matching a reference
+
+When the user shows a GIF or screen recording to copy:
+
+1. `python3 "$SKILL/scripts/analyze_reference.py" reference.mp4 ref-analysis --crop x,y,w,h` (crop away
+   phone status bars and app chrome; needs numpy and Pillow). It reports the real frame rate, the loop
+   length, and an activity timeline, and writes `contact_sheet.png` and `activity.png` (red = what moves).
+2. Open both images. List which regions move and what each one does (fill, grow, sweep, travel).
+   Everything that is not red should stay still in your build.
+3. Rebuild the layout in your own content and words. Match the style, structure and timing, not the
+   source's text or artwork.
 
 ## Renderer options
 
-`--stills 0.3,2.6` (PNG only) · `--fps 15` · `--width 1080` (output width) · `--scale 2`
-(supersampling) · `--mp4` / `--mp4-repeat 3` · `--colors 256` · `--dither none|bayer|sierra2_4a`
-· `--out path.gif` · `--no-poster` · `--keep-frames` · `--bundle` (writes a standalone
-`.standalone.html` that animates in any browser; click to pause).
+`--stills 0.3,2.6` (PNG only) · `--fps 15` · `--width 1080` (output width) · `--scale 2` (supersampling)
+· `--mp4` / `--mp4-repeat 3` · `--colors 256` · `--dither none|bayer|sierra2_4a` · `--out path.gif`
+· `--no-poster` · `--keep-frames` · `--bundle` · `--doctor`.
 
-If a GIF is too large, try these in order: `--fps 12`, `--width 900`, `--colors 128`, a shorter loop.
+GIF too big (LinkedIn limit is generous, but Slack and email are not)? Try in order: `--fps 12`,
+`--width 900`, `--colors 128`, a shorter loop. The default no-dither palette is already the smallest
+clean option.
 
-## Requirements
+## When something looks wrong
 
-Node 18+, ffmpeg, and Playwright with Chromium. Claude Code cloud sessions have all three. On a
-Mac: `brew install ffmpeg && npm i -g playwright && npx playwright install chromium`. Inter is
-used when installed; otherwise the fallback is Helvetica/Arial.
+- **Text overflow warning:** shorten the copy first; widen a card only if every sibling still fits.
+- **A connector ends in the wrong place:** check the `data-from`/`data-to` ids exist, then try
+  `data-to-edge`, `data-elbow`, or an explicit side.
+- **Chart note collides with the trend line:** move `.chart-note` (`left`/`top`) or shorten the bars.
+- **Fonts look like Arial:** `--doctor` reports missing bundled fonts; the skill folder is incomplete.
+- **Render is slow:** use `--scale 1` while iterating on stills; the final render uses 2.

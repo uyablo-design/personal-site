@@ -365,6 +365,9 @@
     if (document.readyState === "loading") await new Promise((r) => addEventListener("DOMContentLoaded", r, { once: true }));
     canvas = document.querySelector("[data-gifkit]") || document.querySelector(".canvas");
     mountIcons(document);
+    // Fonts load lazily when first used; force every declared face so frames never render in a fallback font.
+    document.body.offsetHeight;
+    await Promise.all([...document.fonts].map((f) => f.load().catch(() => null)));
     await document.fonts.ready;
     const resetDur = num(canvas.dataset.resetDur, 0.45);
     const loop = num(canvas.dataset.loop, 4);

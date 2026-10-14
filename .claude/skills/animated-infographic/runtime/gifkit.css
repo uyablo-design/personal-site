@@ -2,6 +2,18 @@
  * gifkit.css: design system for animated infographic GIFs.
  * Default canvas is LinkedIn portrait (1080x1350). Change --w/--h on .canvas for other sizes.
  */
+/* Inter (SIL OFL 1.1, see fonts/LICENSE-Inter.txt) is bundled so renders look identical in any session. */
+@font-face { font-family: "Inter"; font-weight: 300; font-style: normal; font-display: block; src: url("fonts/Inter-Light.woff2") format("woff2"); }
+@font-face { font-family: "Inter"; font-weight: 400; font-style: normal; font-display: block; src: url("fonts/Inter-Regular.woff2") format("woff2"); }
+@font-face { font-family: "Inter"; font-weight: 500; font-style: normal; font-display: block; src: url("fonts/Inter-Medium.woff2") format("woff2"); }
+@font-face { font-family: "Inter"; font-weight: 600; font-style: normal; font-display: block; src: url("fonts/Inter-SemiBold.woff2") format("woff2"); }
+@font-face { font-family: "Inter"; font-weight: 700; font-style: normal; font-display: block; src: url("fonts/Inter-Bold.woff2") format("woff2"); }
+@font-face { font-family: "Inter"; font-weight: 800; font-style: normal; font-display: block; src: url("fonts/Inter-ExtraBold.woff2") format("woff2"); }
+@font-face { font-family: "Inter Display"; font-weight: 500; font-style: normal; font-display: block; src: url("fonts/InterDisplay-Medium.woff2") format("woff2"); }
+@font-face { font-family: "Inter Display"; font-weight: 600; font-style: normal; font-display: block; src: url("fonts/InterDisplay-SemiBold.woff2") format("woff2"); }
+@font-face { font-family: "Inter Display"; font-weight: 700; font-style: normal; font-display: block; src: url("fonts/InterDisplay-Bold.woff2") format("woff2"); }
+@font-face { font-family: "Inter Display"; font-weight: 800; font-style: normal; font-display: block; src: url("fonts/InterDisplay-ExtraBold.woff2") format("woff2"); }
+
 :root {
   --bg: #fbfbfa;
   --panel: #ffffff;
@@ -85,7 +97,7 @@ html.gifkit-preview .canvas {
 .section-head {
   align-self: flex-start; display: inline-flex; align-items: baseline; gap: 8px;
   background: var(--t-tint); color: var(--ink); border-radius: 8px;
-  padding: 5px 12px; font-family: var(--font-display); font-size: 22px; font-weight: 650; letter-spacing: -0.01em;
+  padding: 5px 12px; font-family: var(--font-display); font-size: 22px; font-weight: 700; letter-spacing: -0.01em;
 }
 .section-head .aside { font-family: var(--font); font-size: 16px; font-weight: 500; color: var(--ink-2); }
 .section-note {
@@ -95,7 +107,7 @@ html.gifkit-preview .canvas {
   font-size: 13.5px; font-weight: 600; color: var(--ink);
 }
 .section-note .ic { color: var(--t); }
-.section-note .soft { font-weight: 450; color: var(--ink-2); font-size: 12.5px; }
+.section-note .soft { font-weight: 500; color: var(--ink-2); font-size: 12.5px; }
 
 /* ---------- nodes / cards ---------- */
 .node {
@@ -103,7 +115,7 @@ html.gifkit-preview .canvas {
   padding: 9px 11px; display: flex; flex-direction: column; gap: 5px; position: relative;
 }
 .node.accent { border-color: var(--t-line); }
-.node-title { display: flex; align-items: center; gap: 7px; font-size: 15.5px; font-weight: 650; letter-spacing: -0.01em; color: var(--ink); line-height: 1.15; }
+.node-title { display: flex; align-items: center; gap: 7px; font-size: 15.5px; font-weight: 700; letter-spacing: -0.01em; color: var(--ink); line-height: 1.15; }
 .node-sub { font-size: 12px; color: var(--muted); line-height: 1.3; }
 .node ul { list-style: none; display: flex; flex-direction: column; gap: 2px; font-size: 11.5px; color: var(--ink-2); }
 .node ul li::before { content: "•"; color: var(--t, var(--muted)); margin-right: 6px; }
@@ -159,12 +171,12 @@ html.gifkit-preview .canvas {
   font-family: var(--font-display); font-size: 21px; font-weight: 600; line-height: 1;
   padding: 5px 7px; border-radius: 6px; background: var(--t-tint); color: var(--t-ink);
 }
-.tip-title { font-family: var(--font-display); font-size: 22px; font-weight: 650; letter-spacing: -0.015em; position: relative; }
+.tip-title { font-family: var(--font-display); font-size: 22px; font-weight: 700; letter-spacing: -0.015em; position: relative; }
 .tip-title::after { content: ""; position: absolute; left: 0; bottom: -5px; width: 48px; height: 2.5px; border-radius: 2px; background: var(--t); }
 .tip p { font-size: 14px; color: var(--ink-2); line-height: 1.42; }
 
 /* ---------- divider ---------- */
-.divider { display: flex; align-items: center; gap: 14px; font-family: var(--font-display); font-size: 21px; font-weight: 650; letter-spacing: -0.01em; color: var(--ink); }
+.divider { display: flex; align-items: center; gap: 14px; font-family: var(--font-display); font-size: 21px; font-weight: 700; letter-spacing: -0.01em; color: var(--ink); }
 .divider::before, .divider::after {
   content: ""; flex: 1; height: 10px;
   background:
@@ -205,6 +217,6 @@ svg.wires { position: absolute; inset: 0; width: 100%; height: 100%; overflow: v
 /* ---------- utilities ---------- */
 .muted { color: var(--muted); } .ink2 { color: var(--ink-2); }
 .small { font-size: 12px; } .tiny { font-size: 10.5px; }
-.b { font-weight: 650; } .center { text-align: center; }
+.b { font-weight: 700; } .center { text-align: center; }
 .mono { font-family: var(--mono); }
 .nowrap { white-space: nowrap; }
