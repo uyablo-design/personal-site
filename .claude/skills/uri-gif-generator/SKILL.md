@@ -1,5 +1,5 @@
 ---
-name: animated-infographic
+name: uri-gif-generator
 description: Generate polished, animated infographic GIFs (also MP4 and PNG) for LinkedIn and social posts, in the style of the diagram-heavy "explainer" GIFs that go viral there. Flow diagrams with traveling connector dots, filling confidence bars, highlighter sweeps, growing bar charts with a drawn trend arrow, numbered tip cards, all in a seamless loop. Use this skill whenever the user asks for an animated infographic, an explainer or diagram GIF, "one of those GIFs", an animated version of a diagram, concept, framework, before/after or process, a visual for a LinkedIn or Twitter post, or wants to copy the look of a GIF or screen recording they show you, even if they only say "GIF" or "make this move" and never mention infographics. Not for searching for existing GIFs, trimming videos, or screen-capturing apps.
 compatibility: Needs Node 18+, ffmpeg, and Playwright with Chromium. Run `node "$SKILL/render.mjs" --doctor` to check; cloud Claude Code sessions normally have everything. Inter fonts are bundled.
 ---
