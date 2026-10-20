@@ -1,0 +1,14 @@
+# one-click-site / scroll-craft build output: hundreds of MB per build, never committed
+scrollcraft/
+lab/
+out/
+*.mp4
+*.mov
+*.webm
+
+# local tooling
+node_modules/
+package-lock.json
+.env
+.env.local
+.DS_Store
