@@ -8,7 +8,7 @@ fails after three has a structural problem, and the report says what it is.
 ## The runner
 
 ```bash
-bash .claude/skills/one-click-site/scripts/verify.sh --root <build> --out <build>/lab [--port 4500] [--steps 3]
+bash .claude/skills/uri-one-click-site/scripts/verify.sh --root <build> --out <build>/lab [--port 4500] [--steps 3]
 ```
 
 What it does, in order:

@@ -11,7 +11,7 @@ of them. Fix hits; re-run `verify.sh` if anything changed.
 Follow `.claude/skills/impeccable/reference/document.md` in scan mode (auto-
 extract from the shipped CSS, then the eight-section body). Its Step 3 asks the
 user for qualitative language; under delegation you author that language and
-mark the section `authored by one-click-site; confirm or edit`. Replace the
+mark the section `authored by uri-one-click-site; confirm or edit`. Replace the
 Phase 2 draft at the project root. Remove the `draft:` marker.
 
 ## 3. Finish review

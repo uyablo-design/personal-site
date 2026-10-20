@@ -1,10 +1,10 @@
 ---
-name: one-click-site
+name: uri-one-click-site
 description: "Build a complete, verified, distinctive website from a one-line brief with no follow-up questions, by running Impeccable, scroll-craft, the DESIGN.md reference library and the copy, accessibility and SEO add-on skills in a fixed order. Use this whenever the user asks for a website, landing page, homepage, portfolio or marketing site to be built, rebuilt or redesigned end to end, says 'one click', 'just build it', 'use your judgment', or gives a brief and expects a finished site back rather than a design discussion. Use it even if they only name a brand and a vibe. Not for editing one component, for app UI inside an existing product, or when the user wants to be interviewed first (then run /impeccable shape or /scroll-craft directly)."
 argument-hint: "\"<one-line brief>\" [--interview] [--generate] [--into <dir>] [--name <slug>] [--pages home,about,...] [--assets <dir>]"
 ---
 
-# one-click-site
+# uri-one-click-site
 
 One line in, one finished site out. The user has delegated every decision by
 invoking this skill, so the run asks nothing and instead records what it
@@ -61,7 +61,7 @@ followed together, not averaged.
 ## Phase 0: Preflight
 
 ```bash
-bash .claude/skills/one-click-site/scripts/doctor.sh
+bash .claude/skills/uri-one-click-site/scripts/doctor.sh
 ```
 
 It reports node, ffmpeg, playwright-core, Chrome (and whether this shell is
@@ -106,7 +106,7 @@ batch first and write the answers verbatim; then proceed exactly as above.
 Read [references/world-lineage.md](references/world-lineage.md). Then:
 
 ```bash
-python3 .claude/skills/one-click-site/scripts/pick-reference.py \
+python3 .claude/skills/uri-one-click-site/scripts/pick-reference.py \
   --query "<sector and audience words from the brief>" \
   --mood "<dark|light> <warm|cool> <serif|sans|mono> <editorial|product|luxury|playful>" \
   --top 3
@@ -115,7 +115,7 @@ python3 .claude/skills/one-click-site/scripts/pick-reference.py \
 Open the three candidates' `DESIGN.md`, choose one lineage, and derive this
 site's own tokens. Write them twice, from the same values: as scroll-craft's
 theme block (six colours, two fonts) and as a draft `DESIGN.md` at the project
-root in Impeccable's `document.md` schema, marked `draft: one-click-site`.
+root in Impeccable's `document.md` schema, marked `draft: uri-one-click-site`.
 
 Before building, run the `no-ai-slop-design` point-of-view check: who is this
 for, what should they feel in two seconds, what is the one visual idea. Write
@@ -156,7 +156,7 @@ never facts.
 Read [references/verification.md](references/verification.md). Each round:
 
 ```bash
-bash .claude/skills/one-click-site/scripts/verify.sh --root <build> --out <build>/lab
+bash .claude/skills/uri-one-click-site/scripts/verify.sh --root <build> --out <build>/lab
 ```
 
 It serves the folder, shoots desktop, mobile and reduced-motion strips with

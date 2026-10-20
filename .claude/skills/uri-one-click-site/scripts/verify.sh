@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# one-click-site verification runner: serve, shoot (desktop/mobile/reduced), detect, static checks, report.
+# uri-one-click-site verification runner: serve, shoot (desktop/mobile/reduced), detect, static checks, report.
 # Usage: verify.sh --root <build> --out <dir> [--port 4500] [--steps 3] [--chrome <path>] [--no-sc-ready]
 set -u
 ROOT=""; OUT=""; PORT=4500; STEPS=3; CHROME="${SCROLLCRAFT_CHROME:-}"; EXPECT_READY=1
@@ -24,8 +24,8 @@ if [ "$(id -u)" = "0" ]; then
   if [ -z "$U" ]; then for cand in ubuntu $(awk -F: '$3>=1000 && $3<60000 && $7!~/nologin|false/{print $1}' /etc/passwd); do
     h=$(getent passwd "$cand" | cut -d: -f6); [ -n "$h" ] && [ -d "$h" ] && { U="$cand"; break; }; done; fi
   if [ -n "$U" ] && command -v runuser >/dev/null; then
-    UH=$(getent passwd "$U" | cut -d: -f6); SHOT_OUT="$UH/.one-click-site/$(date +%s)"
-    mkdir -p "$SHOT_OUT"; chown -R "$U" "$UH/.one-click-site"
+    UH=$(getent passwd "$U" | cut -d: -f6); SHOT_OUT="$UH/.uri-one-click-site/$(date +%s)"
+    mkdir -p "$SHOT_OUT"; chown -R "$U" "$UH/.uri-one-click-site"
     RUN="runuser -u $U -- env HOME=$UH PATH=$PATH SCROLLCRAFT_CHROME=$CHROME"
     runuser -u "$U" -- test -r "$ROOT/index.html" || echo "warn: $U cannot read $ROOT; screenshots may fail (chmod -R o+rX)"
     echo "root shell: running browser steps as '$U' (sandbox on), output staged in $SHOT_OUT"

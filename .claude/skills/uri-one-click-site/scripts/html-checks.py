@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Static checks for the one-click-site gates. Usage: html-checks.py [--json] --root <build> [files...]
+"""Static checks for the uri-one-click-site gates. Usage: html-checks.py [--json] --root <build> [files...]
 Without files, scans every .html and non-engine .css under --root (lab/ excluded).
 Exit 1 when any hard finding exists."""
 import argparse

@@ -12,7 +12,7 @@ So the rule is **lineage**: inherit discipline, replace identity.
 ## 1. Shortlist
 
 ```bash
-python3 .claude/skills/one-click-site/scripts/pick-reference.py \
+python3 .claude/skills/uri-one-click-site/scripts/pick-reference.py \
   --query "biotech executive writing advisory" \
   --mood "light warm serif editorial" --top 3 --json
 ```
@@ -77,7 +77,7 @@ The same six colours and two fonts feed both instruments:
 Draft `DESIGN.md` at the project root using Impeccable's `document.md`
 front matter schema (colors, typography, rounded, spacing, components) with
 the same values, and the eight-section body with the qualitative language
-authored by you. Mark the file `draft: one-click-site` in the front matter;
+authored by you. Mark the file `draft: uri-one-click-site` in the front matter;
 Phase 5 rewrites it from the shipped artifact.
 
 Fonts: use faces that load without a licence problem (a self-hosted open

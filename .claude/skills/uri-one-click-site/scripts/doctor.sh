@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# one-click-site preflight. Read-only: reports what the run can and cannot do.
+# uri-one-click-site preflight. Read-only: reports what the run can and cannot do.
 # Exit 1 only on required failures.
 set -u
 ROOT=$(git rev-parse --show-toplevel 2>/dev/null || pwd)
@@ -8,7 +8,7 @@ ok(){ printf ' [ ok ] %-22s %s\n' "$1" "$2"; }
 warn(){ printf ' [warn] %-22s %s\n' "$1" "$2"; WARN=$((WARN+1)); }
 fail(){ printf ' [FAIL] %-22s %s\n' "$1" "$2"; FAIL=$((FAIL+1)); }
 WARN=0; FAIL=0
-echo "one-click-site preflight  (project root: $ROOT)"; echo
+echo "uri-one-click-site preflight  (project root: $ROOT)"; echo
 
 # runtimes
 if command -v node >/dev/null; then

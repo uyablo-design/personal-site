@@ -1,7 +1,7 @@
 # Product
 
 <!-- impeccable:product-schema 1 -->
-<!-- Written by one-click-site from a one-line brief under explicit delegation.
+<!-- Written by uri-one-click-site from a one-line brief under explicit delegation.
      Every fact not supported by the brief or a file in the project carries the
      suffix (inferred). Correct those and the next run uses the corrections. -->
 

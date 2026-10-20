@@ -1,6 +1,6 @@
 # BRIEF: <site name>
 
-**Self-authored under explicit creative delegation** (one-click-site, <date>).
+**Self-authored under explicit creative delegation** (uri-one-click-site, <date>).
 The user invoked a zero-question build. Every answer below is marked
 **Evidence** (from the brief or a file) or **Authored** (a decision taken
 under delegation). The report lists the Authored ones for correction.
