@@ -26,7 +26,15 @@
         "The canvas is not pure black: no background set to #000 or #000000",
         "Screenshots exist for a desktop width (>=1200px) and a mobile width (<=800px, i.e. 390 at 2x)",
         "report.md lists the run's assumptions and its placeholders",
-        "The h1 heading text is present statically in index.html (real markup, not runtime-injected)"
+        "The h1 heading text is present statically in index.html (real markup, not runtime-injected)",
+        "privacy.html, terms.html and accessibility.html exist and every page's footer links all three",
+        "Every page's footer carries a copyright line with the current year",
+        "axe-core reports zero serious or critical WCAG 2.2 AA violations on every page at 1440 and 390 px",
+        "Every keyboard tab stop shows a visible focus change; no keyboard trap",
+        "No horizontal overflow at 320 px, including with the WCAG text-spacing override",
+        "The privacy policy names every third-party host, cookie and form field found in lab/data-inventory.json",
+        "No accessibility overlay widget is present",
+        "The report lists legal launch blockers and recommends review by counsel"
       ]
     },
     {
@@ -49,7 +57,15 @@
         "The canvas is not pure black: no background set to #000 or #000000",
         "Screenshots exist for a desktop width (>=1200px) and a mobile width (<=800px, i.e. 390 at 2x)",
         "report.md lists the run's assumptions and its placeholders",
-        "The h1 heading text is present statically in index.html (real markup, not runtime-injected)"
+        "The h1 heading text is present statically in index.html (real markup, not runtime-injected)",
+        "privacy.html, terms.html and accessibility.html exist and every page's footer links all three",
+        "Every page's footer carries a copyright line with the current year",
+        "axe-core reports zero serious or critical WCAG 2.2 AA violations on every page at 1440 and 390 px",
+        "Every keyboard tab stop shows a visible focus change; no keyboard trap",
+        "No horizontal overflow at 320 px, including with the WCAG text-spacing override",
+        "The privacy policy names every third-party host, cookie and form field found in lab/data-inventory.json",
+        "No accessibility overlay widget is present",
+        "The report lists legal launch blockers and recommends review by counsel"
       ]
     },
     {
@@ -74,7 +90,15 @@
         "The canvas is not pure black: no background set to #000 or #000000",
         "Screenshots exist for a desktop width (>=1200px) and a mobile width (<=800px, i.e. 390 at 2x)",
         "report.md lists the run's assumptions and its placeholders",
-        "The h1 heading text is present statically in index.html (real markup, not runtime-injected)"
+        "The h1 heading text is present statically in index.html (real markup, not runtime-injected)",
+        "privacy.html, terms.html and accessibility.html exist and every page's footer links all three",
+        "Every page's footer carries a copyright line with the current year",
+        "axe-core reports zero serious or critical WCAG 2.2 AA violations on every page at 1440 and 390 px",
+        "Every keyboard tab stop shows a visible focus change; no keyboard trap",
+        "No horizontal overflow at 320 px, including with the WCAG text-spacing override",
+        "The privacy policy names every third-party host, cookie and form field found in lab/data-inventory.json",
+        "No accessibility overlay widget is present",
+        "The report lists legal launch blockers and recommends review by counsel"
       ]
     }
   ]

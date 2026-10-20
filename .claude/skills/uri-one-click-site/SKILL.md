@@ -1,7 +1,7 @@
 ---
 name: uri-one-click-site
-description: "Build a complete, verified, distinctive website from a one-line brief with no follow-up questions, by running Impeccable, scroll-craft, the DESIGN.md reference library and the copy, accessibility and SEO add-on skills in a fixed order. Use this whenever the user asks for a website, landing page, homepage, portfolio or marketing site to be built, rebuilt or redesigned end to end, says 'one click', 'just build it', 'use your judgment', or gives a brief and expects a finished site back rather than a design discussion. Use it even if they only name a brand and a vibe. Not for editing one component, for app UI inside an existing product, or when the user wants to be interviewed first (then run /impeccable shape or /scroll-craft directly)."
-argument-hint: "\"<one-line brief>\" [--interview] [--generate] [--into <dir>] [--name <slug>] [--pages home,about,...] [--assets <dir>]"
+description: "Build a complete, verified, distinctive website from a one-line brief with no follow-up questions, by running Impeccable, scroll-craft, the DESIGN.md reference library and the copy, accessibility and SEO add-on skills in a fixed order, and ships it accessible to WCAG 2.2 AA (the standard California's Unruh Act, ADA case law and the CCPA regulations point to) with a privacy policy, terms of use, accessibility statement and copyright line drafted from what the site actually does. Use this whenever the user asks for a website, landing page, homepage, portfolio or marketing site to be built, rebuilt or redesigned end to end, says 'one click', 'just build it', 'use your judgment', or gives a brief and expects a finished site back rather than a design discussion. Use it even if they only name a brand and a vibe. Not for editing one component, for app UI inside an existing product, or when the user wants to be interviewed first (then run /impeccable shape or /scroll-craft directly)."
+argument-hint: "\"<one-line brief>\" [--interview] [--generate] [--into <dir>] [--name <slug>] [--pages home,about,...] [--assets <dir>] [--owner \"Legal Name\"] [--contact-email a@b.c] [--ccpa yes|no] [--analytics <provider>]"
 ---
 
 # uri-one-click-site
@@ -36,6 +36,10 @@ followed together, not averaged.
 | `--name <slug>` | derived from brief | Build folder name under the scroll-craft workspace. |
 | `--pages a,b,c` | derived from brief | Fix the page set instead of inferring it. |
 | `--assets <dir>` | none | Folder of the user's photos, footage, logo. Read before deciding the world. |
+| `--owner "<legal name>"` | inferred from the brief, else a launch blocker | The person or entity named in the privacy policy, terms and copyright line. |
+| `--contact-email <addr>` | none: launch blocker | Where privacy and accessibility requests go. Never invented. |
+| `--ccpa yes\|no` | `no` (recorded as assumed) | Whether the owner meets a CCPA/CPRA threshold; `yes` adds the California rights section, request methods and opt-out signal handling. |
+| `--analytics <provider>` | none | Add an analytics provider. Without it the site ships with no analytics, no trackers and no cookies, which keeps the privacy policy short and true. |
 
 ## Non-negotiables
 
@@ -55,6 +59,21 @@ followed together, not averaged.
   [references/world-lineage.md](references/world-lineage.md).
 - **Verified, not described.** Nothing ships without `scripts/verify.sh`
   passing its hard gates and the screenshots having been looked at.
+- **Accessible by construction, to California's bar.** Build to WCAG 2.2 AA,
+  which contains the WCAG 2.1 AA level that the Unruh Act, ADA Title III case
+  law and the CCPA regulations point to. Motion respects reduced-motion and
+  anything that moves on its own can be paused. Never add an accessibility
+  overlay widget, and never claim "fully compliant". See
+  [references/california-accessibility.md](references/california-accessibility.md).
+- **Legal pages that tell the truth.** Every site ships `privacy.html`,
+  `terms.html` and `accessibility.html`, linked from every page's footer next
+  to a dated copyright line. The privacy policy is written after the build
+  from the measured data inventory, never from a template's guesses, and
+  verify.sh fails it if it misses a third party, cookie or form field. The
+  site collects nothing by default. Unknown legal facts are marked as launch
+  blockers, never invented, and the report always recommends review by
+  counsel: these are drafts, not legal advice. See
+  [references/legal-pages.md](references/legal-pages.md).
 - **Finish the job.** The deliverable is complete except assets only the user
   can supply.
 
@@ -94,9 +113,14 @@ three files before any design thinking:
 2. `<build>/BRIEF.md` in scroll-craft's eight-topic form, from
    `assets/BRIEF.template.md`, headed `Self-authored under explicit creative
    delegation`.
-3. `<build>/site-plan.md`: the page set, each page's mode (Persuade, Read or
-   Operate in Impeccable's vocabulary), the nav and footer, and which
-   instrument builds each page.
+3. `<build>/site-plan.md`: the page set (always including privacy, terms
+   and accessibility), each page's mode (Persuade, Read or Operate in
+   Impeccable's vocabulary), the nav and footer, which instrument builds each
+   page, and a **Legal facts** block: owner legal name, contact email, CCPA
+   applicability, whether the subject needs a not-professional-advice
+   disclaimer (health, medicine, finance, law, investment), any data the site
+   must collect and why, and the audiences it serves (EU, UK or Israel are
+   flagged as not covered by this skill's legal templates).
 
 With `--interview`, ask the eight questions from scroll-craft Step 0 in one
 batch first and write the answers verbatim; then proceed exactly as above.
@@ -146,6 +170,26 @@ first edit, and the matching `mode-read.md` or `mode-operate.md`. These pages
 earn their place through precision, not spectacle: the visitor came to read or
 to do something.
 
+**Accessibility, while building, not after**: read
+[references/california-accessibility.md](references/california-accessibility.md)
+before the first page is written. Skip link first, landmarks, one h1,
+labelled controls, visible focus (3:1) never hidden by sticky chrome, 24 px
+targets, 320 px reflow, zoom never disabled, reduced motion honoured, and a
+visible pause control on anything that moves by itself for more than five
+seconds. Decorative video is `aria-hidden`, muted and out of the tab order.
+
+**Legal pages**: build `privacy.html`, `terms.html` and `accessibility.html`
+in the site's own design from `assets/legal/` (see its README for the
+placeholder and conditional-block rules), after the first verify round has
+produced `lab/data-inventory.json`, so the policy describes the site as
+measured. Footer on every page, in the same place: `© <year> <owner>. All
+rights reserved.`, links to Privacy, Terms and Accessibility, and the contact
+method. Unknown facts become `<span class="legal-todo"
+data-legal-todo="KEY">` markers. Follow
+[references/legal-pages.md](references/legal-pages.md) for what CalOPPA
+always requires, what CCPA adds when `--ccpa yes`, and what never goes in by
+default (arbitration clauses, class-action waivers).
+
 **Copy**: every visible sentence gets the `humanizer` pass before the
 verification loop (load the skill if listed; its rules are summarised in
 [references/verification.md](references/verification.md)). It changes wording,
@@ -160,15 +204,24 @@ bash .claude/skills/uri-one-click-site/scripts/verify.sh --root <build> --out <b
 ```
 
 It serves the folder, shoots desktop, mobile and reduced-motion strips with
-scroll-craft's `shoot.mjs`, runs Impeccable's detector, runs
-`html-checks.py`, and writes `lab/report.json` plus `lab/summary.md`. Open the
+scroll-craft's `shoot.mjs`, runs Impeccable's detector, runs `audit.mjs` on
+every page (axe-core WCAG 2.2 AA at 1440, 390 and 320 px, a real keyboard
+walk checking visible and unobscured focus and keyboard traps, 320 px reflow,
+the WCAG text-spacing override, and the data inventory: third-party hosts,
+cookies, storage, forms), runs `html-checks.py` (page basics, WCAG
+structure, overlay ban, the legal set and CalOPPA elements), reconciles
+`privacy.html` with the data inventory, and writes `lab/report.json` plus
+`lab/summary.md`. Open the
 contact sheets and look at them at every scroll position, then fix everything
 the report and your eyes found, batched, before shooting again.
 
 After the gates pass, run the finishing passes in this order, each as its own
 narrow, non-interactive Impeccable command on the build folder: `audit`,
-`polish`, `typeset`, `harden`. Then `accessibility-review`, `on-page-seo` and
-`schema-markup` (load each if listed; fallbacks are in the reference). Any
+`polish`, `typeset`, `harden`. Then `accessibility-review` (a human-style
+WCAG 2.2 AA review on top of the automated gates; it is the closest this
+pipeline gets to the manual review automated tools cannot replace),
+`on-page-seo` and `schema-markup` (load each if listed; fallbacks are in the
+reference). Any
 edit they make sends you back through `verify.sh` once more. Three rounds that
 still fail a hard gate end the run with the failure named in the report, not
 hidden.
@@ -189,7 +242,11 @@ Read [references/handoff.md](references/handoff.md).
    build in place and print the copy command. Never overwrite a live site
    silently.
 6. Write the report in the format in `handoff.md`, with the screenshot strips,
-   the placeholder list, the assumptions list and anything not verified.
+   the placeholder list, the assumptions list, anything not verified, and the
+   **Accessibility and legal** section: the standard built to, what the gates
+   proved and what remains manual (screen reader pass, real devices), the data
+   inventory, every legal launch blocker, and the plain statement that the
+   legal pages are drafts for review by counsel.
 
 Do not commit or deploy. Say what to run to do either.
 

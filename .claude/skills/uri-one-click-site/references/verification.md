@@ -43,6 +43,17 @@ What it does, in order:
 | No gradient text, neon glow, zero-offset halo shadows | html-checks + detect | Both skills ban them |
 | Local links resolve; no `lorem`, `TODO`, `[placeholder]` in visible text | html-checks | Finished means finished; placeholders are marked in the report, not left in copy |
 | Reduced-motion strip reads in order with every act visible | your eyes | No script can judge this |
+| axe-core WCAG 2.2 AA: zero serious or critical violations at 1440 and 390 px, every page | audit.mjs | The automated floor of the California standard |
+| Every tab stop shows a visible focus change; none hidden by sticky chrome; no keyboard trap | audit.mjs keyboard walk | WCAG 2.4.7, 2.4.11, 2.1.2 |
+| No horizontal overflow at 320 px, and none with the text-spacing override | audit.mjs | WCAG 1.4.10, 1.4.12 |
+| Skip link, landmarks, labelled controls, zoom not disabled, no positive tabindex, no overlay widget, pause control for looping autoplay | html-checks | WCAG 2.4.1, 1.3.1, 1.4.4, 2.4.3, 2.2.2 |
+| privacy.html, terms.html, accessibility.html exist; every footer links them and carries a dated copyright line | html-checks | The legal set; legal-pages.md |
+| Privacy policy has an effective date, Do Not Track, third-party collection, change notice, contact | html-checks | CalOPPA, Bus. & Prof. Code 22575 |
+| Privacy policy names every third-party host, cookie, storage key and form field the running site uses | privacy_reconcile.py | A policy that misdescribes the site is worse than none |
+
+`legal-todo` markers are soft (they do not fail a round) but every one is a
+launch blocker in the report: the owner has to supply that fact before the
+site goes live.
 
 ## Soft checks (fix if you can, report if you cannot)
 
@@ -75,7 +86,7 @@ narrow Impeccable command (they are non-interactive; see
 Then the add-ons. Load each skill if it is listed; otherwise apply the
 fallback below inline.
 
-- **accessibility-review**: WCAG 2.1 AA pass. Fallback: focus order and
+- **accessibility-review**: WCAG 2.2 AA pass. Fallback: focus order and
   visible focus rings; every interactive element reachable by keyboard; no
   information carried by colour alone; `prefers-reduced-motion` honoured;
   touch targets at least 44px; headings in order; landmarks (`header`,

@@ -65,6 +65,24 @@ Last verify.sh summary.md, verbatim. Fingerprint gate result per row (or
 Anything verify.sh could not run, any soft check left, anything the three
 rounds could not close.
 
+## Accessibility and legal
+Standard: built to WCAG 2.2 AA. Automated gates passed (axe-core at three
+widths, keyboard walk, reflow, text spacing, structure), with the counts.
+Not yet done, and why: screen-reader pass (VoiceOver/NVDA), real-device
+keyboard walk-through, review by disabled users; automated tools find only
+part of real issues.
+Data inventory: third-party hosts, cookies, storage, forms (from
+lab/data-inventory.json), and confirmation that privacy.html discloses each.
+Legal pages: privacy.html, terms.html, accessibility.html; CCPA assumed
+<applies / does not apply>; jurisdictions not covered (if the audience
+suggests any).
+**These legal pages are drafts written from the site's measured behaviour.
+They are not legal advice. Have counsel review them before launch.**
+
+## Launch blockers
+Every `legal-todo` key (owner legal name, contact email, and so on) with the
+page it appears on. The site must not go live until each is supplied.
+
 ## Placeholders you must supply
 Every marked placeholder with its file and line, and what real content goes
 there.

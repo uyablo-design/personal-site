@@ -104,6 +104,14 @@ Pages
 Nav: <items, in order>      Footer: <items>
 Shared: tokens.css (from DESIGN.md), nav + footer markup identical on all pages
 Placeholders expected: <list, or "none">
+
+Legal facts
+  Owner (legal name): <from --owner or the brief; else legal-todo owner-legal-name>
+  Contact email: <from --contact-email; else legal-todo contact-email (launch blocker)>
+  CCPA applies: <from --ccpa; default "no (assumed)">
+  Data the site must collect: <none | contact form (fields + purpose) | newsletter | analytics provider>
+  Professional-advice disclaimer: <yes: health/medicine/finance/law/investment topic | no>
+  Audiences beyond California/US: <none | EU/UK/Israel: flag as not covered>
 Assumptions: <bullets, each also in PRODUCT.md as (inferred)>
 ```
 

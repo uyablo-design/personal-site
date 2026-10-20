@@ -10,6 +10,9 @@
   about.html ...      secondary pages, Impeccable craft floor
   tokens.css          the shared tokens (Phase 2)
   site.css            secondary-page styles, imports tokens.css
+  privacy.html        privacy policy, written from lab/data-inventory.json (legal-pages.md)
+  terms.html          terms of use
+  accessibility.html  accessibility statement
   scrollcraft.css     copied from the scroll-craft engine, unedited
   scrollcraft.js      copied from the scroll-craft engine, unedited
   assets/             the user's material, encoded clips, SVG, fonts
@@ -68,8 +71,13 @@ each file (static site, no includes). Decide it once in `site-plan.md`:
 - Nav: wordmark, then at most four links, then one action if the category
   has one. The current page is marked (`aria-current="page"`).
 - Footer: the resolve of the landing page is not the footer; the footer is
-  the same quiet block everywhere: name, the links, one line of legal if the
-  project has one, nothing else.
+  the same quiet block everywhere, in the same place on every page (WCAG
+  3.2.6): `© <year> <owner>. All rights reserved.`, links to Privacy, Terms
+  and Accessibility (and Privacy Choices only if the site sells or shares
+  data), and the contact method. verify.sh fails a page that lacks any of
+  them.
+- Skip link: the first focusable element of every page is a visible-on-focus
+  "Skip to content" link to `<main id="main">`.
 
 ## Copy
 

@@ -6,7 +6,7 @@ The user invoked a zero-question build. Every answer below is marked
 under delegation). The report lists the Authored ones for correction.
 
 ## 1. Vibe, and references from any medium
-<three to five words> — Evidence/Authored
+<three to five words>: Evidence or Authored
 References (never a website, never the lineage brand): <a film / record sleeve / building / magazine / game>
 
 ## 2. The scroll journey, in the brand's words

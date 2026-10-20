@@ -12,3 +12,7 @@ package-lock.json
 .env
 .env.local
 .DS_Store
+
+# python bytecode from skill scripts
+__pycache__/
+*.pyc

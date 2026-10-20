@@ -46,7 +46,10 @@ if [ -f "$SK/scroll-craft/scripts/doctor.mjs" ]; then
 fi
 
 # playwright-core must resolve from the project root (shoot.mjs resolves from cwd)
-(cd "$ROOT" && node -e "require.resolve('playwright-core')" 2>/dev/null) && ok playwright-core "resolves from $ROOT" || warn playwright-core "not resolvable from $ROOT; run: cd $ROOT && npm i --no-save playwright-core (keep node_modules out of git)"
+(cd "$ROOT" && node -e "require.resolve('playwright-core')" 2>/dev/null) && ok playwright-core "resolves from $ROOT" || warn playwright-core "not resolvable from $ROOT; run: cd $ROOT && npm i --no-save --no-package-lock playwright-core axe-core (install both in ONE command: npm --no-save prunes anything not named)"
+
+# axe-core for the accessibility audit (WCAG 2.2 AA rules)
+(cd "$ROOT" && node -e "require.resolve('axe-core/axe.min.js')" 2>/dev/null) && ok axe-core "$(cd "$ROOT" && node -p "require('axe-core/package.json').version") resolves from $ROOT" || fail axe-core "not resolvable from $ROOT; run: cd $ROOT && npm i --no-save --no-package-lock playwright-core axe-core (install both in ONE command: npm --no-save prunes anything not named)"
 
 # root + sandbox
 if [ "$(id -u)" = "0" ]; then
