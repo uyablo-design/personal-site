@@ -1,0 +1,105 @@
+{
+  "skill_name": "uri-one-click-site",
+  "evals": [
+    {
+      "id": 1,
+      "name": "personal-site-biotech-ai",
+      "prompt": "/uri-one-click-site \"Personal site for Uri Yablonka, a senior biotech officer and board member who writes about agentic AI in biopharma. Home, about, articles, contact. Keep the existing copy from the current pages.\" --into site-v2",
+      "expected_output": "A multi-page static site in <workspace>/builds/<name>/ copied to site-v2/: scroll-craft landing page, About/Articles/Contact built on the same tokens, PRODUCT.md and DESIGN.md at the project root, lab/ strips, a report listing assumptions and placeholders, no fabricated credentials or metrics.",
+      "files": [
+        "index.html",
+        "about.html",
+        "articles.html",
+        "contact.html"
+      ],
+      "expectations": [
+        "index.html exists in the outputs and renders in Chrome at 1440 and 390 wide with no horizontal overflow and no page errors",
+        "The page has exactly one h1, a lang attribute, a title of 10-70 characters, a meta description of 50-160 characters and a viewport meta",
+        "No em dash appears in visible text",
+        "No scroll-cue text and no zero-padded section counters appear in visible text",
+        "No lorem ipsum, TODO, FIXME or bracketed placeholder text remains in visible copy",
+        "Every img element has an alt attribute",
+        "Impeccable's detector reports zero low-contrast warnings on the page files",
+        "The CSS contains no 'transition: all' and no gradient text (background-clip: text)",
+        "The CSS honours prefers-reduced-motion",
+        "Visible copy contains no invented numbers: no currency amounts, percentages or year-like dates",
+        "The canvas is not pure black: no background set to #000 or #000000",
+        "Screenshots exist for a desktop width (>=1200px) and a mobile width (<=800px, i.e. 390 at 2x)",
+        "report.md lists the run's assumptions and its placeholders",
+        "The h1 heading text is present statically in index.html (real markup, not runtime-injected)",
+        "privacy.html, terms.html and accessibility.html exist and every page's footer links all three",
+        "Every page's footer carries a copyright line with the current year",
+        "axe-core reports zero serious or critical WCAG 2.2 AA violations on every page at 1440 and 390 px",
+        "Every keyboard tab stop shows a visible focus change; no keyboard trap",
+        "No horizontal overflow at 320 px, including with the WCAG text-spacing override",
+        "The privacy policy names every third-party host, cookie and form field found in lab/data-inventory.json",
+        "No accessibility overlay widget is present",
+        "The report lists legal launch blockers and recommends review by counsel"
+      ]
+    },
+    {
+      "id": 2,
+      "name": "product-landing-no-assets",
+      "prompt": "/uri-one-click-site \"Landing page for Nightfall, a small-batch cold brew coffee sold in cans. Dark, quiet, premium. No photos yet.\"",
+      "expected_output": "A single landing page built on a non-photographic world (typographic, SVG or CSS depth), no grey image boxes, no invented tasting notes or prices unless marked, strips at desktop/mobile/reduced, FINGERPRINTS row appended.",
+      "files": [],
+      "expectations": [
+        "index.html exists in the outputs and renders in Chrome at 1440 and 390 wide with no horizontal overflow and no page errors",
+        "The page has exactly one h1, a lang attribute, a title of 10-70 characters, a meta description of 50-160 characters and a viewport meta",
+        "No em dash appears in visible text",
+        "No scroll-cue text and no zero-padded section counters appear in visible text",
+        "No lorem ipsum, TODO, FIXME or bracketed placeholder text remains in visible copy",
+        "Every img element has an alt attribute",
+        "Impeccable's detector reports zero low-contrast warnings on the page files",
+        "The CSS contains no 'transition: all' and no gradient text (background-clip: text)",
+        "The CSS honours prefers-reduced-motion",
+        "Visible copy contains no invented numbers: no currency amounts, percentages or year-like dates",
+        "The canvas is not pure black: no background set to #000 or #000000",
+        "Screenshots exist for a desktop width (>=1200px) and a mobile width (<=800px, i.e. 390 at 2x)",
+        "report.md lists the run's assumptions and its placeholders",
+        "The h1 heading text is present statically in index.html (real markup, not runtime-injected)",
+        "privacy.html, terms.html and accessibility.html exist and every page's footer links all three",
+        "Every page's footer carries a copyright line with the current year",
+        "axe-core reports zero serious or critical WCAG 2.2 AA violations on every page at 1440 and 390 px",
+        "Every keyboard tab stop shows a visible focus change; no keyboard trap",
+        "No horizontal overflow at 320 px, including with the WCAG text-spacing override",
+        "The privacy policy names every third-party host, cookie and form field found in lab/data-inventory.json",
+        "No accessibility overlay widget is present",
+        "The report lists legal launch blockers and recommends review by counsel"
+      ]
+    },
+    {
+      "id": 3,
+      "name": "studio-with-own-photos",
+      "prompt": "/uri-one-click-site \"Site for Atelier Sul, a two-person architecture studio in Lisbon. Editorial, lots of white space. Our project photos are in ./photos.\" --assets photos --pages home,work,studio,contact",
+      "expected_output": "Four pages using the supplied photos as the material, an editorial register with a serif display face chosen on purpose, no generation, Work page listing only projects that have photos, Contact with no invented address or phone.",
+      "files": [
+        "photos/"
+      ],
+      "expectations": [
+        "index.html exists in the outputs and renders in Chrome at 1440 and 390 wide with no horizontal overflow and no page errors",
+        "The page has exactly one h1, a lang attribute, a title of 10-70 characters, a meta description of 50-160 characters and a viewport meta",
+        "No em dash appears in visible text",
+        "No scroll-cue text and no zero-padded section counters appear in visible text",
+        "No lorem ipsum, TODO, FIXME or bracketed placeholder text remains in visible copy",
+        "Every img element has an alt attribute",
+        "Impeccable's detector reports zero low-contrast warnings on the page files",
+        "The CSS contains no 'transition: all' and no gradient text (background-clip: text)",
+        "The CSS honours prefers-reduced-motion",
+        "Visible copy contains no invented numbers: no currency amounts, percentages or year-like dates",
+        "The canvas is not pure black: no background set to #000 or #000000",
+        "Screenshots exist for a desktop width (>=1200px) and a mobile width (<=800px, i.e. 390 at 2x)",
+        "report.md lists the run's assumptions and its placeholders",
+        "The h1 heading text is present statically in index.html (real markup, not runtime-injected)",
+        "privacy.html, terms.html and accessibility.html exist and every page's footer links all three",
+        "Every page's footer carries a copyright line with the current year",
+        "axe-core reports zero serious or critical WCAG 2.2 AA violations on every page at 1440 and 390 px",
+        "Every keyboard tab stop shows a visible focus change; no keyboard trap",
+        "No horizontal overflow at 320 px, including with the WCAG text-spacing override",
+        "The privacy policy names every third-party host, cookie and form field found in lab/data-inventory.json",
+        "No accessibility overlay widget is present",
+        "The report lists legal launch blockers and recommends review by counsel"
+      ]
+    }
+  ]
+}
